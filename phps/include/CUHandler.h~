@@ -1,0 +1,70 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// CUHandler.h - Class Header File
+//
+// Description: Moonlight Company
+//              Maze Solver Project
+//              Control Unit Class
+//
+// Modified : 25.04.2016 by Utku Norman  ( norman.utku@metu.edu.tr  )
+// Created  : 24.04.2016 by Utku Norman  ( norman.utku@metu.edu.tr  )
+//
+// People	: 	Doga Yucalan ( yucalan.doga@metu.edu.tr )
+//			Utku Norman  ( norman.utku@metu.edu.tr  )
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#ifndef CUHANDLER_H
+#define CUHANDLER_H
+
+#include <string>
+// Include class-related definitions 
+//	such as the struct CHPacket
+#include "CHandler.h"
+
+
+
+static CUPacket 	CUPacketNull		;
+
+static bool IsNull( const CUPacket& test	)
+{
+	return &test == &CUPacketNull		;
+}
+
+class CUHandler
+{
+	public:
+
+		/** @brief Constructor.
+		 */
+		CUHandler( void )		;
+
+		/** @brief Handler.
+		 */
+		CUPacket handle(
+			CHPacket senseData ,
+			DDPacket nextState
+			) ;
+
+		/** @brief Print and display the current state.
+		 */
+		void printState( bool debugMode = false ) ;
+
+	private:
+		CUPacket state			;
+
+		bool debugMode			;
+
+
+		CUPacket commandUp			;
+		CUPacket commandDown		;
+
+		/** @brief Applies thresholding and dilation on an image.
+		@param image 		Input  image.
+		grayscale
+		 */
+		void tt(		
+			);
+};
+
+#endif // CUHANDLER_H

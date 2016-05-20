@@ -1,0 +1,56 @@
+
+** (nautilus:2818): WARNING **: Couldn't connect to accessibility bus: Failed to connect to socket /tmp/dbus-63U0eedTnD: Connection refused
+
+(nautilus:2818): Gtk-WARNING **: Failed to register client: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name org.gnome.SessionManager was not provided by any .service files
+Initializing nautilus-dropbox 2015.10.28
+
+** (nautilus:2818): WARNING **: Can not calculate _NET_NUMBER_OF_DESKTOPS
+
+** (nautilus:2818): WARNING **: Can not calculate _NET_NUMBER_OF_DESKTOPS
+
+** (nautilus:2818): WARNING **: Can not get _NET_WORKAREA
+
+** (nautilus:2818): WARNING **: Can not determine workarea, guessing at layout
+Nautilus-Share-Message: Called "net usershare info" but it failed: 'net usershare' returned error 255: mkdir failed on directory /var/run/samba/msg.lock: Permission denied
+net usershare: cannot open usershare directory /var/lib/samba/usershares. Error No such file or directory
+Please ask your system administrator to enable user sharing.
+
+Nautilus-Share-Message: Called "net usershare info" but it failed: 'net usershare' returned error 255: mkdir failed on directory /var/run/samba/msg.lock: Permission denied
+net usershare: cannot open usershare directory /var/lib/samba/usershares. Error No such file or directory
+Please ask your system administrator to enable user sharing.
+
+Nautilus-Share-Message: Called "net usershare info" but it failed: 'net usershare' returned error 255: mkdir failed on directory /var/run/samba/msg.lock: Permission denied
+net usershare: cannot open usershare directory /var/lib/samba/usershares. Error No such file or directory
+Please ask your system administrator to enable user sharing.
+
+Nautilus-Share-Message: Called "net usershare info" but it failed: 'net usershare' returned error 255: mkdir failed on directory /var/run/samba/msg.lock: Permission denied
+net usershare: cannot open usershare directory /var/lib/samba/usershares. Error No such file or directory
+Please ask your system administrator to enable user sharing.
+
+Nautilus-Share-Message: Called "net usershare info" but it failed: 'net usershare' returned error 255: mkdir failed on directory /var/run/samba/msg.lock: Permission denied
+net usershare: cannot open usershare directory /var/lib/samba/usershares. Error No such file or directory
+Please ask your system administrator to enable user sharing.
+
+Nautilus-Share-Message: Called "net usershare info" but it failed: 'net usershare' returned error 255: mkdir failed on directory /var/run/samba/msg.lock: Permission denied
+net usershare: cannot open usershare directory /var/lib/samba/usershares. Error No such file or directory
+Please ask your system administrator to enable user sharing.
+
+Nautilus-Share-Message: Called "net usershare info" but it failed: 'net usershare' returned error 255: mkdir failed on directory /var/run/samba/msg.lock: Permission denied
+net usershare: cannot open usershare directory /var/lib/samba/usershares. Error No such file or directory
+Please ask your system administrator to enable user sharing.
+
+Nautilus-Share-Message: Called "net usershare info" but it failed: 'net usershare' returned error 255: mkdir failed on directory /var/run/samba/msg.lock: Permission denied
+net usershare: cannot open usershare directory /var/lib/samba/usershares. Error No such file or directory
+Please ask your system administrator to enable user sharing.
+
+
+(nautilus:2818): Gdk-WARNING **: nautilus: Fatal IO error 11 (Resource temporarily unavailable) on X server :0.
+
+
+** (nautilus:7711): WARNING **: Couldn't connect to accessibility bus: Failed to connect to socket /tmp/dbus-g9vMjlUYhg: Connection refused
+
+(nautilus:7711): Gtk-CRITICAL **: gtk_icon_theme_get_for_screen: assertion 'GDK_IS_SCREEN (screen)' failed
+
+(nautilus:7711): GLib-GObject-WARNING **: invalid (NULL) pointer instance
+
+(nautilus:7711): GLib-GObject-CRITICAL **: g_signal_connect_object: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed

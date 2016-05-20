@@ -1,0 +1,240 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// DogaWorkspace.cpp - Source File
+//
+// Description: Moonlight Company
+//              Maze Solver Project
+//              Doğa Yücalan's Playground
+//
+// Modified : 17.04.2016 by Doga Yucalan ( yucalan.doga@metu.edu.tr )
+// Created  : 16.03.2016 by Utku Norman ( norman.utku@metu.edu.tr )
+//
+// Style:
+//  http://geosoft.no/development/cppstyle.html#Include Files
+//
+// Associated code-snippet sources:
+// https://solarianprogrammer.com/2015/05/08/detect-red-circles-image-using-opencv/
+// http://docs.opencv.org/3.1.0/df/d9d/tutorial_py_colorspaces.html#gsc.tab=0
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#include <stdio.h>
+
+#include <opencv2/opencv.hpp>
+
+#include "DogaWorkspace.h"
+#include "UtkuWorkspace.h"
+
+using namespace cv;
+
+// show image - helper function
+void showImage(
+	const std::string label,
+	cv::Mat image)
+{
+	// CV_WINDOW_AUTOSIZE
+	// CV_WINDOW_NORMAL
+	cv::namedWindow(label, CV_WINDOW_NORMAL);
+    	cv::imshow(label, image);
+}
+
+// draw contours - helper function (not mine but still)
+void my_drawContours(
+	const std::string label,
+	cv::Mat image,
+	std::vector< std::vector< cv::Point > > contours,
+	std::vector< cv::Vec4i > hierarchy)
+{
+	RNG rng(12345);
+	Mat drawing = Mat::zeros(image.size(),CV_8UC3);
+	
+    	for( int i = 0; i<contours.size(); i++ )
+	{
+		Scalar color = Scalar(rng.uniform(0, 255),rng.uniform(0,255),rng.uniform(0,255));
+		drawContours(drawing,contours,i, color,2,8,hierarchy,0,Point());
+      	}
+
+	showImage("contours", drawing);
+}
+
+//////////////////////////////////////////////////////////
+////////// Functions below will go to IPhandler //////////
+//////////////////////////////////////////////////////////
+
+// grayscale, threshold, dilate
+void thresholdingOverall(
+	const cv::Mat rimage,
+	cv::Mat& timage,
+	cv::Mat& dimage)
+{
+	// grayscaling, BGR->GRAY
+	cv::Mat gimage;
+	cv::cvtColor(rimage, gimage, CV_BGR2GRAY);
+	
+	// thresholding, thresholds are to be adjusted (12-255 etc.)
+	//cv::threshold(gimage, timage, 40, 255, THRESH_BINARY_INV);
+	cv::Canny(gimage, timage, 100, 500);
+	
+	// dilating
+	cv::dilate(timage.clone(),dimage,cv::Mat());
+}
+
+// find contours
+void contoursExtraction(
+	const cv::Mat image,
+	std::vector< std::vector< cv::Point > >& contours,
+    	std::vector< cv::Vec4i >& hierarchy)
+{
+	//  CV_RETR_CCOMP
+    	//  CV_RETR_EXTERNAL
+	//  CV_RETR_TREE
+	
+    	//  CV_CHAIN_APPROX_NONE
+    	//  CV_CHAIN_APPROX_SIMPLE
+
+	// find contours and hierarchy
+	cv::findContours(image,contours,hierarchy,CV_RETR_CCOMP,CV_CHAIN_APPROX_SIMPLE);
+
+	// DEBUG: Print contour points
+	//for (int i = 0; i < contours.size(); i++)
+		//std::cout << "Contour id " << i << ": " << contours[i] << std::endl;
+}
+
+// draw curves, set labels, get board vertices
+void boardVerticesDetection(
+	cv::Mat& image,
+	const std::vector< std::vector< cv::Point > > contours,
+	std::vector< cv::Point >& vertices)
+{
+	std::vector< cv::Point > approx;
+
+	for (int i = 0; i < contours.size(); i++)
+	{
+        	// Approximate contour with accuracy proportional to the contour perimeter
+        	cv::approxPolyDP(contours[i],approx,cv::arcLength(contours[i],true)*0.02,true);
+
+		// DEBUG: Decide the upper limit of the contour area above		
+		//std::cout << "Contour id " << i << ": " << cv::contourArea(contours[i]) << std::endl;
+
+		// Skip small or non-convex objects 
+ 		if (std::fabs(cv::contourArea(contours[i]))<500||!cv::isContourConvex(approx))
+          		continue;
+		
+		// DEBUG: Annote all vertices of the curve
+		/*
+		for(std::vector< cv::Point >::size_type j = 0; j != contours[i].size() ; j++ ) 
+		{
+			setLabel(image,"T",contours[i][j]);
+		}
+		*/
+
+		// If the approximation curve is a triangle
+		if (approx.size() == 3)
+		{
+			// DEBUG: Annote all vertices of the triangle 
+			
+			for(std::vector< cv::Point >::size_type j = 0; j != contours[i].size() ; j++) 
+			{
+				//setLabel(image,"H",contours[i][j]);
+			}
+
+			// Annote all vertices of the approximation curve vector
+			for(std::vector< cv::Point >::size_type j = 0 ; j != approx.size() ; j++) 
+	    		{
+				setLabel(image,"V",approx[j]);
+				vertices = approx;
+	    		}
+		    
+			// DEBUG: Annote the mid-point
+	    		//cv::Point mid = averageContour( contours[i] );
+	    		//setLabel( image , "M , mid );            
+	     	}
+		else
+		{
+			// DEBUG: Print the approximation curve vector
+			//std::cout << "non 3: " << std::endl;
+			//std::cout << approx << std::endl;
+			
+			/*
+			for( std::vector< cv::Point >::size_type j = 0 ; j != approx.size() ; j++ ) 
+			{
+			        setLabel( image , "X" ,  approx[ j ] );
+			}
+			*/
+        	}
+    	}
+}
+
+// detecting red ("start"), green ("end") as of now, will try blue ("ball")
+void thresholdingForFeaturePoints(
+	cv::Mat& image,
+	const std::string color,
+	cv::Point& center,
+	int& radius)
+{
+	cv::Mat hsvimage;
+	cv::Mat color_image;
+	std::vector<cv::Vec3f> circles;
+	
+	// BGR->HSV
+	cv::cvtColor(image, hsvimage, CV_BGR2HSV);
+	
+	if(color == "R")
+	{
+		cv::Mat lower;
+		cv::Mat upper;
+
+	 	cv::inRange(hsvimage, cv::Scalar(0, 100, 100), cv::Scalar(10, 255, 255), lower);
+	 	cv::inRange(hsvimage, cv::Scalar(160, 100, 100), cv::Scalar(179, 255, 255), upper);
+		
+		cv::addWeighted(lower, 1.0, upper, 1.0, 0.0, color_image);
+	}
+	else if(color == "G")
+	{
+		cv::inRange(hsvimage, cv::Scalar(40, 100, 30), cv::Scalar(80, 255, 255), color_image);
+	}
+	else if(color == "B")
+	{
+		cv::inRange(hsvimage, cv::Scalar(110, 50, 50), cv::Scalar(130, 255, 255), color_image);
+	}
+	else
+	{
+		std::cout << "Undefined color." << std::endl;
+		std::exit(1);
+	}
+ 
+	cv::GaussianBlur(color_image, color_image, cv::Size(9, 9), 2, 2);
+	cv::HoughCircles(color_image,circles,CV_HOUGH_GRADIENT,1,color_image.rows/8,100,20,0,40);
+
+	if(circles.size() == 0)
+		std::exit(-1);
+
+ 	for(size_t i = 0; i < circles.size(); i++)
+	{
+ 		center = cv::Point(round(circles[i][0]), round(circles[i][1]));
+		radius = round(circles[i][2]);
+
+		// DEBUG: Draw circles
+ 		cv::circle(image, center, radius, cv::Scalar(0, 255, 0), 3);
+		setLabel(image, "C", center);
+	}
+}
+
+// find perspective transform matrix
+void findTransformationMatrix(
+	cv::Point2f* source,
+	cv::Point2f* destination,
+	cv::Mat& M)
+{
+	M = getPerspectiveTransform(source,destination);
+}
+
+// do perspective transform
+void transformImage(
+	cv::Mat inputimage,
+	cv::Mat& outputimage,
+	cv::Mat M,
+	int res)
+{
+	warpPerspective(inputimage,outputimage,M,cv::Size(res,res));
+}

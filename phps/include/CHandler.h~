@@ -1,0 +1,71 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// CHandler.h - Class Header File
+//
+// Description: Moonlight Company
+//              Maze Solver Project
+//              Image Preprocessor Handler Class
+//
+// Modified : 25.04.2016 by Utku Norman  ( norman.utku@metu.edu.tr  )
+// Created  : 24.04.2016 by Utku Norman  ( norman.utku@metu.edu.tr  )
+//
+// People	: 	Doga Yucalan ( yucalan.doga@metu.edu.tr )
+//				Utku Norman  ( norman.utku@metu.edu.tr  )
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#ifndef CHANDLER_H
+#define CHANDLER_H
+
+// Serial Communication Header
+#include "serial/serial.h"
+
+// Descriptions for CUPacket
+#include "CUHandler.h"
+
+struct CHPacket {
+} ;
+
+static CHPacket 	CHPacketNull		;
+
+static bool IsNull( const CHPacket& test	)
+{
+	return &test == &CHPacketNull		;
+}
+
+class CHandler
+{
+	public:
+
+		/** @brief Constructor.
+		 */
+		CHandler( void )							;
+
+		/** @brief Handler.
+		 */
+		CHPacket handle( CUPacket command ) 		;
+
+		/** @brief Print and display the current state.
+		 */
+		void printState( bool debugMode = false ) 	;
+
+	private:
+
+		CHPacket state			;
+
+		CUPacket lastCommand 	;		
+
+		bool debugMode			;
+
+		/** @brief Applies thresholding and dilation on an image.
+		@param image 		Input  image.
+		@param tImage 		Output thresholded image.
+		@param dImage 		Output dilated image.
+		grayscale
+		 */
+		void tt(		
+			);
+
+};
+
+#endif // CHANDLER_H

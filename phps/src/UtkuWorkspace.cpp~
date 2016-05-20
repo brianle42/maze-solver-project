@@ -1,0 +1,81 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// UtkuWorkspace.cpp - Source File
+//
+// Description: Moonlight Company
+//              Maze Solver Project
+//              Utku's Playground
+//
+// Modified : 16.03.2016 by Utku Norman ( norman.utku@metu.edu.tr )
+// Created  : 13.03.2016 by Utku Norman ( norman.utku@metu.edu.tr )
+//
+// Style:
+//  http://geosoft.no/development/cppstyle.html#Include Files
+//
+// Associated code snippet sources :
+//
+//  http://opencv-code.com/tutorials/detecting-simple-shapes-in-an-image/
+//  https://github.com/bsdnoobz/opencv-code/blob/master/shape-detect.cpp
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#include <stdio.h>
+
+#include <opencv2/opencv.hpp>
+
+#include "UtkuWorkspace.h"
+
+using namespace cv;
+
+// display text in the center of a contour - helper function
+void setLabel(
+	cv::Mat& im,
+	const std::string label,
+	std::vector<cv::Point>& contour)
+{
+	int fontface = FONT_HERSHEY_SIMPLEX;
+	double scale = 0.4;
+	int thickness = 1;
+	int baseline = 0;
+
+	cv::Size text = cv::getTextSize(label, fontface, scale, thickness, &baseline);
+	cv::Rect r = cv::boundingRect(contour);
+
+	cv::Point pt(r.x + ((r.width - text.width) / 2), r.y + ((r.height + text.height) / 2));
+	cv::rectangle(im, pt + cv::Point(0, baseline), pt + cv::Point(text.width, -text.height), CV_RGB(255,255,255), CV_FILLED);
+	cv::putText(im, label, pt, fontface, scale, CV_RGB(0,0,0), thickness, 8);
+}
+
+// display text at a point - helper function
+void setLabel(
+	cv::Mat& im,
+	const std::string label,
+	cv::Point& point)
+{
+	int fontface = cv::FONT_HERSHEY_SIMPLEX;
+	double scale = 0.4;
+	int thickness = 1;
+	int baseline = 0;
+
+	cv::Size text = cv::getTextSize(label, fontface, scale, thickness, &baseline);
+	//cv::Rect r = cv::boundingRect(contour);
+	cv::Rect r = cv::Rect( point , text );
+
+	cv::Point pt(r.x + ((r.width - text.width) / 2), r.y + ((r.height + text.height) / 2));
+	cv::rectangle(im, pt + cv::Point(0, baseline), pt + cv::Point(text.width, -text.height), CV_RGB(255,255,255), CV_FILLED);
+	cv::putText(im, label, pt, fontface, scale, CV_RGB(0,0,0), thickness, 8);
+} 
+
+// average contours - helper function
+cv::Point averageContour(
+	std::vector< cv::Point >& v)
+{
+	cv::Point return_value( 0.0 , 0.0 );
+	int n = v.size( );
+	for( std::vector< cv::Point >::size_type i = 0; i != v.size( ) ; i++ )
+	{
+	return_value += v[ i ];
+	}
+	return_value /= ( int )( v.size() );
+	return ( return_value );
+}

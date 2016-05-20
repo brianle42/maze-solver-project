@@ -1,0 +1,40 @@
+////////////////////////////////////////////////////////////////////////////////
+//
+// UtkuWorkspace.h - Class Header File
+//
+// Description: Moonlight Company
+//              Maze Solver Project
+//              Utku's Playground
+//
+// Modified : 16.03.2016 by Utku Norman ( norman.utku@metu.edu.tr )
+// Created  : 13.03.2016 by Utku Norman ( norman.utku@metu.edu.tr )
+//
+// Style:
+//  http://geosoft.no/development/cppstyle.html#Include Files
+//
+// Associated code snippet sources :
+//
+//  http://opencv-code.com/tutorials/detecting-simple-shapes-in-an-image/
+//  https://github.com/bsdnoobz/opencv-code/blob/master/shape-detect.cpp
+//
+////////////////////////////////////////////////////////////////////////////////
+
+#include <stdio.h>
+
+#include <opencv2/opencv.hpp>
+
+// display text in the center of a contour - helper function
+void setLabel(
+	cv::Mat& im,
+	const std::string label,
+	std::vector<cv::Point>& contour);
+
+// display text at a point - helper function
+void setLabel(
+	cv::Mat& im,
+	const std::string label,
+	cv::Point& point);
+
+// average contours - helper function
+cv::Point averageContour(
+	std::vector< cv::Point >& v);
